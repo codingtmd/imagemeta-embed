@@ -4,6 +4,7 @@
 尝试把metadata嵌入到image里面去，这样image的线下交换就会带着metadata，让数据可以跟着image这个载体传播
 
 以月纱这个人物形象（./smaples/月纱.png）为例，
+![月纱](https://github.com/user-attachments/assets/15706d90-ed55-4c2e-ad1f-a1a718f69314)
 
 它原生的metadata大概是这样，文件大小是201kB
 ```
@@ -184,6 +185,8 @@ Megapixels 	 0.393
 这里会对于json进行二次转化，以x64的方式编码，（加密是可选项），然后写入到image
 
 这时候，同样的图片，但是文件大小增加了200kB
+![月纱_clone](https://github.com/user-attachments/assets/5f93013a-815b-4344-a05f-ccf27d76829d)
+
 ```
 FileName 	 月纱_clone.png 
 FileSize 	 442 kB 
