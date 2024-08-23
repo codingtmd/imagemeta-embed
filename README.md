@@ -218,7 +218,6 @@ To get started, follow these steps:
    git clone https://github.com/codingtmd/imagemeta-embed.git
    ```
 
-
 2. **Install Dependencies:** install the necessary dependencies under `imagemeta-embed` directory by running:
    ```
    cd imagemeta-embed

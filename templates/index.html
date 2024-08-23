@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .panel {
+            width: 45%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .panel img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 20px;
+        }
+        .metadata-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .metadata-list li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left panel: Display uploaded image and upload form -->
+        <div class="panel">
+            <h2>Uploaded Image</h2>
+            {% if filepath %}
+                <img src="{{ filepath }}" alt="Uploaded Image">
+            {% else %}
+                <p>No image uploaded yet.</p>
+            {% endif %}
+            <h3>Upload a New Image</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept="image/*">
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        
+        <!-- Right panel: Display image metadata -->
+        <div class="panel">
+            <h2>Image Metadata</h2>
+            {% if exif_data %}
+                <ul class="metadata-list">
+                    {% for key, value in exif_data.items() %}
+                        {% if key == "src" %}
+                            <li><strong>{{ key }}:</strong> <br><img src="{{ value }}" alt="Base64 Image" style="max-width: 100%;"></li>
+                        {% else %}
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <!-- Display the base64 image separately -->
+                {% if "src" in exif_data %}
+                    <h3>Base64 Image</h3>
+                    <img src="{{ exif_data['src'] }}" alt="Base64 Image">
+                {% endif %}
+            {% else %}
+                <p>No metadata found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

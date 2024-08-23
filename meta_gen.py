@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+import subprocess
 from loguru import logger
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
@@ -61,7 +62,7 @@ class Encoder:
         return data_string
 
 class MetaBase:
-    data_field = 'RPGGOMetadata'
+    data_field = 'Chara' #'RPGGOEmbed'
 
     def __init__(self, filepath, encrypt=False):
         self.filepath = filepath
@@ -98,15 +99,20 @@ class MetaWriter(MetaBase):
 
 
 class MetaReader(MetaBase):
-    def execute(self):
-        import pprint
-        targetImage = Image.open(self.filepath)
+    def execute(self):   
+        # Call ExifTool via subprocess to get all metadata
+        result = subprocess.run(["./Image-ExifTool-12.93/exiftool", "-json", self.filepath], stdout=subprocess.PIPE)
+        full_metadata = json.loads(result.stdout)[0]
 
-        metadata = targetImage.info.get(self.data_field)
+        encoded_metadata = full_metadata.get(self.data_field)
+
         if self.encrypt:
+            logger.debug("decrypt encoded data")
             decoded_data_str = Crypt().decrypt(metadata, GLOBAL_ENCRYPT_KEY)
         else:
-            decoded_data_str = Encoder().decode(metadata)
-        logger.debug(decoded_data_str)
-        #userdata=json.loads(metadata)
-        #pprint.pprint(metadata)
+            logger.debug("base64 encoded data")
+            decoded_data_str = Encoder().decode(encoded_metadata)
+        #logger.debug(decoded_data_str)
+        
+        metadata = json.loads(decoded_data_str)
+        return metadata
